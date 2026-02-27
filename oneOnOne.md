@@ -436,12 +436,12 @@ MQ が低い上司はプライドが高い傾向があるため、**「ダメ出
 
 | カラム名 | データ型 | 制約 | 説明 |
 |----------|----------|------|------|
-| `user_id` | `CHAR(36)` | PK | ユーザー ID（UUID。Laravel `Str::uuid()` で生成） |
-| `name` | `VARCHAR(100)` | `NOT NULL` | 氏名 |
+| `user_id` | `VARCHAR(255)` | PK | ユーザー ID（UUID。Laravel `Str::uuid()` で生成） |
+| `name` | `VARCHAR(255)` | `NOT NULL` | 氏名 |
 | `email` | `VARCHAR(255)` | `NOT NULL`, `UNIQUE` | メールアドレス |
-| `department_id` | `CHAR(36)` | FK → `departments.department_id`, `NOT NULL` | 所属部署 ID |
-| `manager_id` | `CHAR(36)` | FK → `users.user_id`, `NULL` 許可 | 直属の上司 ID（自己参照。最上位は NULL） |
-| `role_type` | `VARCHAR(20)` | `NOT NULL`, `CHECK (role_type IN ('employee', 'manager', 'hr', 'executive'))` | 役割 |
+| `department_id` | `VARCHAR(255)` | FK → `departments.department_id`, `NOT NULL` | 所属部署 ID |
+| `manager_id` | `VARCHAR(255)` | FK → `users.user_id`, `NULL` 許可 | 直属の上司 ID（自己参照。最上位は NULL） |
+| `role_type` | `VARCHAR(255)` | `NOT NULL`, `CHECK (role_type IN ('employee', 'manager', 'hr', 'executive'))` | 役割 |
 | `external_system_id` | `VARCHAR(255)` | `NULL` 許可, `UNIQUE` | 外部 ATS 等の連携用 ID |
 | `is_active` | `TINYINT(1)` | `NOT NULL`, `DEFAULT 1` | 有効フラグ（論理削除用） |
 | `created_at` | `DATETIME` | `NOT NULL`, `DEFAULT CURRENT_TIMESTAMP` | 作成日時 |
@@ -459,9 +459,9 @@ MQ が低い上司はプライドが高い傾向があるため、**「ダメ出
 
 | カラム名 | データ型 | 制約 | 説明 |
 |----------|----------|------|------|
-| `department_id` | `CHAR(36)` | PK | 部署 ID（UUID。Laravel `Str::uuid()` で生成） |
-| `name` | `VARCHAR(100)` | `NOT NULL` | 部署名 |
-| `parent_id` | `CHAR(36)` | FK → `departments.department_id`, `NULL` 許可 | 親部署 ID（最上位は NULL） |
+| `department_id` | `VARCHAR(255)` | PK | 部署 ID（UUID。Laravel `Str::uuid()` で生成） |
+| `name` | `VARCHAR(255)` | `NOT NULL` | 部署名 |
+| `parent_id` | `VARCHAR(255)` | FK → `departments.department_id`, `NULL` 許可 | 親部署 ID（最上位は NULL） |
 | `created_at` | `DATETIME` | `NOT NULL`, `DEFAULT CURRENT_TIMESTAMP` | 作成日時 |
 | `updated_at` | `DATETIME` | `NOT NULL`, `DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP` | 更新日時 |
 
@@ -477,13 +477,13 @@ MQ が低い上司はプライドが高い傾向があるため、**「ダメ出
 
 | カラム名 | データ型 | 制約 | 説明 |
 |----------|----------|------|------|
-| `consent_id` | `CHAR(36)` | PK | 同意レコード ID（UUID） |
-| `user_id` | `CHAR(36)` | FK → `users.user_id`, `NOT NULL` | 対象ユーザー ID |
-| `consent_type` | `VARCHAR(50)` | `NOT NULL`, `CHECK (consent_type IN ('recording', 'ai_analysis', 'feedback_collection', 'data_sharing_hr'))` | 同意対象の種別 |
-| `status` | `VARCHAR(20)` | `NOT NULL`, `CHECK (status IN ('granted', 'revoked'))` | 同意状態 |
+| `consent_id` | `VARCHAR(255)` | PK | 同意レコード ID（UUID） |
+| `user_id` | `VARCHAR(255)` | FK → `users.user_id`, `NOT NULL` | 対象ユーザー ID |
+| `consent_type` | `VARCHAR(255)` | `NOT NULL`, `CHECK (consent_type IN ('recording', 'ai_analysis', 'feedback_collection', 'data_sharing_hr'))` | 同意対象の種別 |
+| `status` | `VARCHAR(255)` | `NOT NULL`, `CHECK (status IN ('granted', 'revoked'))` | 同意状態 |
 | `granted_at` | `DATETIME` | `NOT NULL`, `DEFAULT CURRENT_TIMESTAMP` | 同意日時 |
 | `revoked_at` | `DATETIME` | `NULL` 許可 | 撤回日時 |
-| `ip_address` | `VARCHAR(45)` | `NULL` 許可 | 同意操作時の IP アドレス（IPv6 対応） |
+| `ip_address` | `VARCHAR(255)` | `NULL` 許可 | 同意操作時の IP アドレス（IPv6 対応） |
 | `user_agent` | `TEXT` | `NULL` 許可 | 同意操作時の UA |
 | `created_at` | `DATETIME` | `NOT NULL`, `DEFAULT CURRENT_TIMESTAMP` | 作成日時 |
 
@@ -505,15 +505,15 @@ MQ が低い上司はプライドが高い傾向があるため、**「ダメ出
 
 | カラム名 | データ型 | 制約 | 説明 |
 |----------|----------|------|------|
-| `session_id` | `CHAR(36)` | PK | セッション ID（UUID） |
-| `manager_id` | `CHAR(36)` | FK → `users.user_id`, `NOT NULL` | 実施上司 ID |
-| `subordinate_id` | `CHAR(36)` | FK → `users.user_id`, `NOT NULL` | 実施部下 ID |
+| `session_id` | `VARCHAR(255)` | PK | セッション ID（UUID） |
+| `manager_id` | `VARCHAR(255)` | FK → `users.user_id`, `NOT NULL` | 実施上司 ID |
+| `subordinate_id` | `VARCHAR(255)` | FK → `users.user_id`, `NOT NULL` | 実施部下 ID |
 | `scheduled_at` | `DATETIME` | `NOT NULL` | 実施予定日時 |
 | `started_at` | `DATETIME` | `NULL` 許可 | 実際の開始日時 |
 | `ended_at` | `DATETIME` | `NULL` 許可 | 実際の終了日時 |
-| `status` | `VARCHAR(20)` | `NOT NULL`, `DEFAULT 'scheduled'`, `CHECK (status IN ('scheduled', 'in_progress', 'completed', 'cancelled'))` | 状態 |
-| `topic_type` | `VARCHAR(30)` | `NOT NULL`, `CHECK (topic_type IN ('work_progress', 'career', 'relationship', 'private'))` | 部下が選んだトピック |
-| `expectation_mode` | `VARCHAR(20)` | `NOT NULL`, `CHECK (expectation_mode IN ('advice', 'listening', 'co_creation', 'discussion'))` | 上司に期待する対応 |
+| `status` | `VARCHAR(255)` | `NOT NULL`, `DEFAULT 'scheduled'`, `CHECK (status IN ('scheduled', 'in_progress', 'completed', 'cancelled'))` | 状態 |
+| `topic_type` | `VARCHAR(255)` | `NOT NULL`, `CHECK (topic_type IN ('work_progress', 'career', 'relationship', 'private'))` | 部下が選んだトピック |
+| `expectation_mode` | `VARCHAR(255)` | `NOT NULL`, `CHECK (expectation_mode IN ('advice', 'listening', 'co_creation', 'discussion'))` | 上司に期待する対応 |
 | `recording_consent_manager` | `TINYINT(1)` | `NOT NULL`, `DEFAULT 0` | 上司の録音同意 |
 | `recording_consent_subordinate` | `TINYINT(1)` | `NOT NULL`, `DEFAULT 0` | 部下の録音同意 |
 | `created_at` | `DATETIME` | `NOT NULL`, `DEFAULT CURRENT_TIMESTAMP` | 作成日時 |
@@ -534,8 +534,8 @@ MQ が低い上司はプライドが高い傾向があるため、**「ダメ出
 
 | カラム名 | データ型 | 制約 | 説明 |
 |----------|----------|------|------|
-| `analysis_id` | `CHAR(36)` | PK | 解析レコード ID（UUID） |
-| `session_id` | `CHAR(36)` | FK → `one_on_one_sessions.session_id`, `NOT NULL`, `UNIQUE` | セッション ID（1:1） |
+| `analysis_id` | `VARCHAR(255)` | PK | 解析レコード ID（UUID） |
+| `session_id` | `VARCHAR(255)` | FK → `one_on_one_sessions.session_id`, `NOT NULL`, `UNIQUE` | セッション ID（1:1） |
 | `transcript_text` | `LONGTEXT` | `NULL` 許可 | 全文書き起こし（同意がない場合は NULL） |
 | `ai_summary` | `TEXT` | `NULL` 許可 | AI 要約 |
 | `action_items` | `JSON` | `NULL` 許可 | 抽出されたネクストアクション一覧（`JSON_EXTRACT()` で検索可能） |
@@ -560,9 +560,9 @@ MQ が低い上司はプライドが高い傾向があるため、**「ダメ出
 
 | カラム名 | データ型 | 制約 | 説明 |
 |----------|----------|------|------|
-| `feedback_id` | `CHAR(36)` | PK | フィードバック ID（UUID） |
-| `session_id` | `CHAR(36)` | FK → `one_on_one_sessions.session_id`, `NOT NULL` | セッション ID |
-| `respondent_id` | `CHAR(36)` | FK → `users.user_id`, `NOT NULL` | 回答者 ID |
+| `feedback_id` | `VARCHAR(255)` | PK | フィードバック ID（UUID） |
+| `session_id` | `VARCHAR(255)` | FK → `one_on_one_sessions.session_id`, `NOT NULL` | セッション ID |
+| `respondent_id` | `VARCHAR(255)` | FK → `users.user_id`, `NOT NULL` | 回答者 ID |
 | `satisfaction_score` | `TINYINT` | `NOT NULL`, `CHECK (satisfaction_score BETWEEN 1 AND 5)` | 満足度（1-5） |
 | `free_comment` | `TEXT` | `NULL` 許可 | 自由記述コメント |
 | `created_at` | `DATETIME` | `NOT NULL`, `DEFAULT CURRENT_TIMESTAMP` | 作成日時 |
@@ -580,15 +580,15 @@ MQ が低い上司はプライドが高い傾向があるため、**「ダメ出
 
 | カラム名 | データ型 | 制約 | 説明 |
 |----------|----------|------|------|
-| `mq_id` | `CHAR(36)` | PK | スコアレコード ID（UUID） |
-| `manager_id` | `CHAR(36)` | FK → `users.user_id`, `NOT NULL` | 対象の上司 ID |
+| `mq_id` | `VARCHAR(255)` | PK | スコアレコード ID（UUID） |
+| `manager_id` | `VARCHAR(255)` | FK → `users.user_id`, `NOT NULL` | 対象の上司 ID |
 | `recorded_date` | `DATE` | `NOT NULL` | 算出日（月次スナップショット） |
 | `trust_score` | `DECIMAL(5,2)` | `NOT NULL`, `CHECK (trust_score BETWEEN 0 AND 100)` | 信頼（$T$） |
 | `growth_score` | `DECIMAL(5,2)` | `NOT NULL`, `CHECK (growth_score BETWEEN 0 AND 100)` | 育成（$G$） |
 | `performance_score` | `DECIMAL(5,2)` | `NOT NULL`, `CHECK (performance_score BETWEEN 0 AND 100)` | 成果（$P$） |
 | `adaptability_score` | `DECIMAL(5,2)` | `NOT NULL`, `CHECK (adaptability_score BETWEEN 0 AND 100)` | 自己改善（$A$） |
 | `total_mq_score` | `DECIMAL(5,2)` | `NOT NULL`, `CHECK (total_mq_score BETWEEN 0 AND 100)` | 総合 MQ スコア |
-| `weight_config_id` | `CHAR(36)` | FK → `mq_weight_configs.config_id`, `NOT NULL` | 算出時の重み設定 ID |
+| `weight_config_id` | `VARCHAR(255)` | FK → `mq_weight_configs.config_id`, `NOT NULL` | 算出時の重み設定 ID |
 | `created_at` | `DATETIME` | `NOT NULL`, `DEFAULT CURRENT_TIMESTAMP` | 作成日時 |
 
 **インデックス:**
@@ -601,7 +601,7 @@ MQ が低い上司はプライドが高い傾向があるため、**「ダメ出
 
 | カラム名 | データ型 | 制約 | 説明 |
 |----------|----------|------|------|
-| `config_id` | `CHAR(36)` | PK | 設定 ID（UUID） |
+| `config_id` | `VARCHAR(255)` | PK | 設定 ID（UUID） |
 | `w_trust` | `DECIMAL(3,2)` | `NOT NULL`, `CHECK (w_trust BETWEEN 0 AND 1)` | $w_1$: Trust の重み |
 | `w_growth` | `DECIMAL(3,2)` | `NOT NULL`, `CHECK (w_growth BETWEEN 0 AND 1)` | $w_2$: Growth の重み |
 | `w_performance` | `DECIMAL(3,2)` | `NOT NULL`, `CHECK (w_performance BETWEEN 0 AND 1)` | $w_3$: Performance の重み |
@@ -626,9 +626,9 @@ MQ が低い上司はプライドが高い傾向があるため、**「ダメ出
 
 | カラム名 | データ型 | 制約 | 説明 |
 |----------|----------|------|------|
-| `skill_id` | `CHAR(36)` | PK | スキルレコード ID（UUID） |
-| `user_id` | `CHAR(36)` | FK → `users.user_id`, `NOT NULL` | 対象ユーザー ID |
-| `skill_name` | `VARCHAR(100)` | `NOT NULL` | スキル項目名 |
+| `skill_id` | `VARCHAR(255)` | PK | スキルレコード ID（UUID） |
+| `user_id` | `VARCHAR(255)` | FK → `users.user_id`, `NOT NULL` | 対象ユーザー ID |
+| `skill_name` | `VARCHAR(255)` | `NOT NULL` | スキル項目名 |
 | `current_level` | `TINYINT` | `NOT NULL`, `CHECK (current_level BETWEEN 1 AND 5)` | 現在のレベル（1-5） |
 | `target_level` | `TINYINT` | `NOT NULL`, `CHECK (target_level BETWEEN 1 AND 5)` | 目標レベル（1-5） |
 | `created_at` | `DATETIME` | `NOT NULL`, `DEFAULT CURRENT_TIMESTAMP` | 作成日時 |
@@ -651,10 +651,10 @@ MQ が低い上司はプライドが高い傾向があるため、**「ダメ出
 
 | カラム名 | データ型 | 制約 | 説明 |
 |----------|----------|------|------|
-| `program_id` | `CHAR(36)` | PK | プログラム ID（UUID） |
-| `manager_id` | `CHAR(36)` | FK → `users.user_id`, `NOT NULL` | 対象の上司 ID |
-| `target_dimension` | `VARCHAR(20)` | `NOT NULL`, `CHECK (target_dimension IN ('trust', 'growth', 'performance', 'adaptability'))` | 改善対象 |
-| `status` | `VARCHAR(20)` | `NOT NULL`, `DEFAULT 'active'`, `CHECK (status IN ('active', 'completed', 'stalled'))` | 状態 |
+| `program_id` | `VARCHAR(255)` | PK | プログラム ID（UUID） |
+| `manager_id` | `VARCHAR(255)` | FK → `users.user_id`, `NOT NULL` | 対象の上司 ID |
+| `target_dimension` | `VARCHAR(255)` | `NOT NULL`, `CHECK (target_dimension IN ('trust', 'growth', 'performance', 'adaptability'))` | 改善対象 |
+| `status` | `VARCHAR(255)` | `NOT NULL`, `DEFAULT 'active'`, `CHECK (status IN ('active', 'completed', 'stalled'))` | 状態 |
 | `start_date` | `DATE` | `NOT NULL` | 開始日 |
 | `end_date` | `DATE` | `NULL` 許可 | 終了日 |
 | `created_at` | `DATETIME` | `NOT NULL`, `DEFAULT CURRENT_TIMESTAMP` | 作成日時 |
@@ -669,12 +669,12 @@ MQ が低い上司はプライドが高い傾向があるため、**「ダメ出
 
 | カラム名 | データ型 | 制約 | 説明 |
 |----------|----------|------|------|
-| `mission_id` | `CHAR(36)` | PK | ミッション ID（UUID） |
-| `program_id` | `CHAR(36)` | FK → `training_programs.program_id`, `NOT NULL` | 親プログラム ID |
-| `title` | `VARCHAR(200)` | `NOT NULL` | ミッション内容 |
+| `mission_id` | `VARCHAR(255)` | PK | ミッション ID（UUID） |
+| `program_id` | `VARCHAR(255)` | FK → `training_programs.program_id`, `NOT NULL` | 親プログラム ID |
+| `title` | `VARCHAR(255)` | `NOT NULL` | ミッション内容 |
 | `description` | `TEXT` | `NULL` 許可 | ミッションの詳細説明 |
 | `is_completed` | `TINYINT(1)` | `NOT NULL`, `DEFAULT 0` | 完了フラグ |
-| `completed_method` | `VARCHAR(20)` | `NULL` 許可, `CHECK (completed_method IN ('ai_auto', 'self_report', 'manual'))` | 完了判定の方法 |
+| `completed_method` | `VARCHAR(255)` | `NULL` 許可, `CHECK (completed_method IN ('ai_auto', 'self_report', 'manual'))` | 完了判定の方法 |
 | `ai_feedback` | `TEXT` | `NULL` 許可 | AI の評価コメント |
 | `due_date` | `DATE` | `NULL` 許可 | 期限日 |
 | `created_at` | `DATETIME` | `NOT NULL`, `DEFAULT CURRENT_TIMESTAMP` | 作成日時 |
@@ -692,13 +692,13 @@ AI の判定に対する異議申し立てと人間レビューの記録（第 1
 
 | カラム名 | データ型 | 制約 | 説明 |
 |----------|----------|------|------|
-| `review_id` | `CHAR(36)` | PK | レビュー ID（UUID） |
-| `target_type` | `VARCHAR(30)` | `NOT NULL`, `CHECK (target_type IN ('session_analysis', 'mq_score', 'critical_alert', 'unfair_eval_alert'))` | 判定の種別 |
-| `target_id` | `CHAR(36)` | `NOT NULL` | 対象レコードの ID |
-| `requester_id` | `CHAR(36)` | FK → `users.user_id`, `NOT NULL` | 異議申し立て者 ID |
+| `review_id` | `VARCHAR(255)` | PK | レビュー ID（UUID） |
+| `target_type` | `VARCHAR(255)` | `NOT NULL`, `CHECK (target_type IN ('session_analysis', 'mq_score', 'critical_alert', 'unfair_eval_alert'))` | 判定の種別 |
+| `target_id` | `VARCHAR(255)` | `NOT NULL` | 対象レコードの ID |
+| `requester_id` | `VARCHAR(255)` | FK → `users.user_id`, `NOT NULL` | 異議申し立て者 ID |
 | `reason` | `TEXT` | `NOT NULL` | 異議の理由 |
-| `status` | `VARCHAR(20)` | `NOT NULL`, `DEFAULT 'pending'`, `CHECK (status IN ('pending', 'under_review', 'upheld', 'overturned', 'dismissed'))` | レビュー状態 |
-| `reviewer_id` | `CHAR(36)` | FK → `users.user_id`, `NULL` 許可 | レビュー担当者 ID |
+| `status` | `VARCHAR(255)` | `NOT NULL`, `DEFAULT 'pending'`, `CHECK (status IN ('pending', 'under_review', 'upheld', 'overturned', 'dismissed'))` | レビュー状態 |
+| `reviewer_id` | `VARCHAR(255)` | FK → `users.user_id`, `NULL` 許可 | レビュー担当者 ID |
 | `reviewer_comment` | `TEXT` | `NULL` 許可 | レビュー担当者のコメント |
 | `resolved_at` | `DATETIME` | `NULL` 許可 | 解決日時 |
 | `created_at` | `DATETIME` | `NOT NULL`, `DEFAULT CURRENT_TIMESTAMP` | 作成日時 |
@@ -719,12 +719,12 @@ AI の判定に対する異議申し立てと人間レビューの記録（第 1
 | カラム名 | データ型 | 制約 | 説明 |
 |----------|----------|------|------|
 | `log_id` | `BIGINT UNSIGNED` | PK, `AUTO_INCREMENT` | ログ ID（連番） |
-| `user_id` | `CHAR(36)` | FK → `users.user_id`, `NULL` 許可 | 操作者 ID（システム操作の場合は NULL） |
-| `action` | `VARCHAR(50)` | `NOT NULL` | 操作種別（例：`view_transcript`, `export_report`, `update_mq_score`） |
-| `target_table` | `VARCHAR(50)` | `NOT NULL` | 対象テーブル名 |
-| `target_id` | `CHAR(36)` | `NULL` 許可 | 対象レコードの ID |
+| `user_id` | `VARCHAR(255)` | FK → `users.user_id`, `NULL` 許可 | 操作者 ID（システム操作の場合は NULL） |
+| `action` | `VARCHAR(255)` | `NOT NULL` | 操作種別（例：`view_transcript`, `export_report`, `update_mq_score`） |
+| `target_table` | `VARCHAR(255)` | `NOT NULL` | 対象テーブル名 |
+| `target_id` | `VARCHAR(255)` | `NULL` 許可 | 対象レコードの ID |
 | `details` | `JSON` | `NULL` 許可 | 操作の詳細（変更前後の値など。`JSON_EXTRACT()` で検索可能） |
-| `ip_address` | `VARCHAR(45)` | `NULL` 許可 | 操作元 IP アドレス（IPv6 対応） |
+| `ip_address` | `VARCHAR(255)` | `NULL` 許可 | 操作元 IP アドレス（IPv6 対応） |
 | `created_at` | `DATETIME` | `NOT NULL`, `DEFAULT CURRENT_TIMESTAMP` | 記録日時 |
 
 **インデックス:**
