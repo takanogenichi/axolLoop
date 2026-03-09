@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AXOL Loop - UI モックアップ（和風モダン）</title>
+<title>AXOL Loop - UI モックアップ</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap');
 
@@ -51,7 +51,7 @@
   .nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     background: var(--ai);
-    border-bottom: 3px solid var(--kin);
+    border-bottom: 2px solid var(--kin);
     display: flex; align-items: center; height: 60px; padding: 0 28px; gap: 28px;
   }
   .nav-logo {
@@ -390,8 +390,8 @@
 
   /* ========== 装飾：青海波パターン ========== */
   .seigaiha-divider {
-    height: 24px; margin: 12px 0 28px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20'%3E%3Cpath d='M0 20 Q10 0 20 20 Q30 0 40 20' fill='none' stroke='%23C4A35A' stroke-width='.5' opacity='.3'/%3E%3C/svg%3E");
+    height: 12px; margin: 8px 0 20px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20'%3E%3Cpath d='M0 20 Q10 0 20 20 Q30 0 40 20' fill='none' stroke='%23C4A35A' stroke-width='.5' opacity='.15'/%3E%3C/svg%3E");
     background-repeat: repeat-x;
     background-position: center;
   }
@@ -402,16 +402,16 @@
 <!-- ナビゲーション -->
 <nav class="nav">
   <div class="nav-logo">
-    <div class="logo-mark">環</div>
+    <div class="logo-mark">A</div>
     AXOL Loop
   </div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showScreen('setup')">壱 ─ 準備</button>
-    <button class="nav-tab" onclick="showScreen('icebreak')">弐 ─ 対話前</button>
-    <button class="nav-tab" onclick="showScreen('whisper')">参 ─ 対話中</button>
-    <button class="nav-tab" onclick="showScreen('feedback')">肆 ─ 振返り</button>
-    <button class="nav-tab" onclick="showScreen('coaching')">伍 ─ 報告</button>
-    <button class="nav-tab" onclick="showScreen('dashboard')">陸 ─ 組織</button>
+    <button class="nav-tab active" onclick="showScreen('setup')">準備</button>
+    <button class="nav-tab" onclick="showScreen('icebreak')">対話前</button>
+    <button class="nav-tab" onclick="showScreen('whisper')">対話中</button>
+    <button class="nav-tab" onclick="showScreen('feedback')">振り返り</button>
+    <button class="nav-tab" onclick="showScreen('coaching')">レポート</button>
+    <button class="nav-tab" onclick="showScreen('dashboard')">組織</button>
   </div>
 </nav>
 
@@ -419,7 +419,7 @@
 <div id="setup" class="screen active">
   <div class="screen-header">
     <span class="screen-badge badge-sub">部下側画面</span>
-    <h1 class="screen-title serif">一対一の準備</h1>
+    <h1 class="screen-title serif">1on1 の準備</h1>
     <p class="screen-desc">次回の 1on1 に向けて、話したいテーマと上司に期待する対応を選んでください。</p>
   </div>
 
@@ -500,25 +500,25 @@
   </div>
 
   <div class="card">
-    <div class="card-header"><div class="deco"></div> きっかけの三問</div>
+    <div class="card-header"><div class="deco"></div> アイスブレイク質問</div>
     <p style="font-size:13px;color:var(--usuzumi);margin-bottom:18px;">田中さんが「キャリア」をトピックに、「傾聴してほしい」を希望しています。</p>
 
     <div class="icebreaker-card">
-      <div class="icebreaker-num">壱</div>
+      <div class="icebreaker-num">1</div>
       <div class="icebreaker-text">
         前回の 1on1 で「フロントエンドのスペシャリストを目指したい」とおっしゃっていましたが、その後何か進展や気持ちの変化はありましたか？
         <div><span class="icebreaker-tag">前回の 1on1 メモより</span></div>
       </div>
     </div>
     <div class="icebreaker-card">
-      <div class="icebreaker-num">弐</div>
+      <div class="icebreaker-num">2</div>
       <div class="icebreaker-text">
         最近の日報で新しいライブラリの調査を担当されていましたね。技術的なチャレンジの中で、今後に活かせそうだと感じたことはありますか？
         <div><span class="icebreaker-tag">直近の日報より</span></div>
       </div>
     </div>
     <div class="icebreaker-card">
-      <div class="icebreaker-num">参</div>
+      <div class="icebreaker-num">3</div>
       <div class="icebreaker-text">
         半年後の自分がどんな状態だったら「順調だ」と感じますか？具体的なイメージがあれば聞かせてください。
         <div><span class="icebreaker-tag">キャリア深掘り質問</span></div>
@@ -527,8 +527,8 @@
   </div>
 
   <div class="point-card" style="margin-bottom:24px;">
-    <div style="font-family:'Noto Serif JP',serif;font-weight:600;color:var(--ai);margin-bottom:6px;">心得</div>
-    <p style="font-size:13px;color:var(--ai);">田中さんは「傾聴してほしい」を選んでいます。助言よりも、まずは話をしっかり聞くことを意識してください。発話比率は <strong>三〜四割以内</strong> を目標にしましょう。</p>
+    <div style="font-family:'Noto Serif JP',serif;font-weight:600;color:var(--ai);margin-bottom:6px;">対話のポイント</div>
+    <p style="font-size:13px;color:var(--ai);">田中さんは「傾聴してほしい」を選んでいます。助言よりも、まずは話をしっかり聞くことを意識してください。発話比率は <strong>30〜40 % 以内</strong>を目標にしましょう。</p>
   </div>
 
   <button class="btn btn-shu btn-lg">対話を始める</button>
@@ -679,7 +679,7 @@
 <div id="coaching" class="screen">
   <div class="screen-header">
     <span class="screen-badge badge-mgr">上司側画面</span>
-    <h1 class="screen-title serif">指導報告書</h1>
+    <h1 class="screen-title serif">コーチングレポート</h1>
     <p class="screen-desc">直近 3 ヶ月間の 1on1 データに基づく AI からの分析・提案です。</p>
   </div>
 
@@ -789,7 +789,7 @@
 <div id="dashboard" class="screen">
   <div class="screen-header">
     <span class="screen-badge badge-hr">人事・管理者画面</span>
-    <h1 class="screen-title serif">組織概覧</h1>
+    <h1 class="screen-title serif">組織ダッシュボード</h1>
     <p class="screen-desc">全社の 1on1 実施状況とマネジメント品質の分析です。</p>
   </div>
 
@@ -814,7 +814,7 @@
 
   <div class="dash-grid">
     <div class="card dash-full">
-      <div class="card-header"><div class="deco" style="background:var(--shu);"></div> 注意報</div>
+      <div class="card-header"><div class="deco" style="background:var(--shu);"></div> アラート</div>
       <div class="alert-item alert-danger">
         <span class="alert-icon">●</span>
         <div><span class="alert-dept">営業二課 ─ 佐藤 部長</span>: 部下の満足度が 3 ヶ月連続低下。過負荷の疑いあり。</div>
@@ -838,30 +838,30 @@
       <div class="score-row">
         <div class="score-avatar" style="background:var(--matcha);">高</div>
         <div><div class="score-name">高橋 美咲</div><div class="score-dept">CS 課</div></div>
-        <span class="type-tag">秀 ─ 理想型</span>
+        <span class="type-tag">ハイ・リーダー</span>
         <div class="mq-num" style="color:var(--matcha);">82</div>
-        <span class="score-badge score-A">甲</span>
+        <span class="score-badge score-A">A</span>
       </div>
       <div class="score-row">
         <div class="score-avatar" style="background:var(--ai);">山</div>
         <div><div class="score-name">山本 健一</div><div class="score-dept">開発二課</div></div>
-        <span class="type-tag">良 ─ 標準型</span>
+        <span class="type-tag">スタンダード</span>
         <div class="mq-num" style="color:var(--ai);">64</div>
-        <span class="score-badge score-B">乙</span>
+        <span class="score-badge score-B">B</span>
       </div>
       <div class="score-row">
         <div class="score-avatar" style="background:var(--kitsune);">鈴</div>
         <div><div class="score-name">鈴木 大輔</div><div class="score-dept">マーケ課</div></div>
-        <span class="type-tag">可 ─ 支援型</span>
+        <span class="type-tag">ナイス・サポーター</span>
         <div class="mq-num" style="color:var(--kitsune);">52</div>
-        <span class="score-badge score-C">丙</span>
+        <span class="score-badge score-C">C</span>
       </div>
       <div class="score-row">
         <div class="score-avatar" style="background:var(--shu);">佐</div>
         <div><div class="score-name">佐藤 剛</div><div class="score-dept">営業二課</div></div>
-        <span class="type-tag">危 ─ 要改善</span>
+        <span class="type-tag">要改善</span>
         <div class="mq-num" style="color:var(--shu);">38</div>
-        <span class="score-badge score-D">丁</span>
+        <span class="score-badge score-D">D</span>
       </div>
     </div>
 
