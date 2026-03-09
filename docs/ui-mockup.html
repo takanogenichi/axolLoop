@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXOL Loop - UI モックアップ（和風モダン）</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap');
+
+  :root {
+    /* 和の伝統色 */
+    --ai: #1B4965;          /* 藍色 */
+    --ai-light: #2C6E8A;
+    --ai-pale: #E8F0F4;
+    --shu: #C53D43;         /* 朱色 */
+    --shu-light: #F2E0E1;
+    --matcha: #5B7A5E;      /* 抹茶色 */
+    --matcha-light: #E5EDE6;
+    --sumi: #2C2C2C;        /* 墨色 */
+    --sumi-light: #4A4A4A;
+    --kin: #C4A35A;          /* 金色 */
+    --kin-light: #F5EFD7;
+    --hakuji: #F7F4EF;      /* 白磁 */
+    --washi: #FAF8F3;        /* 和紙 */
+    --usuzumi: #9E9E9E;      /* 薄墨 */
+    --asagi: #48929B;        /* 浅葱色 */
+    --fuji: #8B72BE;         /* 藤色 */
+    --sakura: #FEDFE1;       /* 桜色 */
+    --karakurenai: #D0104C;  /* 韓紅花 */
+    --kitsune: #F0A868;      /* 狐色 */
+    --radius: 4px;
+    --shadow: 0 1px 4px rgba(0,0,0,.08);
+    --shadow-lg: 0 4px 20px rgba(0,0,0,.1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Zen Kaku Gothic New", "Hiragino Sans", sans-serif;
+    background: var(--washi);
+    color: var(--sumi);
+    line-height: 1.8;
+    /* 和紙テクスチャ風のノイズ */
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+  }
+
+  /* 見出し用の明朝体 */
+  .serif { font-family: "Noto Serif JP", "Hiragino Mincho ProN", serif; }
+
+  /* ========== ナビゲーション ========== */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--ai);
+    border-bottom: 3px solid var(--kin);
+    display: flex; align-items: center; height: 60px; padding: 0 28px; gap: 28px;
+  }
+  .nav-logo {
+    font-family: "Noto Serif JP", serif;
+    font-weight: 700; font-size: 20px; color: var(--kin);
+    display: flex; align-items: center; gap: 10px; white-space: nowrap;
+    letter-spacing: .1em;
+  }
+  .nav-logo .logo-mark {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--kin); color: var(--ai);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700;
+  }
+  .nav-tabs { display: flex; gap: 2px; overflow-x: auto; }
+  .nav-tab {
+    padding: 8px 16px; cursor: pointer; font-size: 13px; white-space: nowrap;
+    transition: all .25s; color: rgba(255,255,255,.6); font-weight: 500;
+    border: none; background: none; border-bottom: 2px solid transparent;
+    font-family: "Zen Kaku Gothic New", sans-serif;
+  }
+  .nav-tab:hover { color: rgba(255,255,255,.9); }
+  .nav-tab.active {
+    color: var(--kin); border-bottom-color: var(--kin); font-weight: 700;
+  }
+
+  /* ========== 画面共通 ========== */
+  .screen { display: none; padding: 84px 24px 60px; max-width: 960px; margin: 0 auto; }
+  .screen.active { display: block; }
+
+  .screen-header {
+    text-align: center; margin-bottom: 36px; padding-bottom: 24px;
+    border-bottom: 1px solid var(--usuzumi); position: relative;
+  }
+  .screen-header::after {
+    content: ''; position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%);
+    width: 60px; height: 3px; background: var(--kin);
+  }
+  .screen-badge {
+    display: inline-block; padding: 4px 16px; border-radius: 2px;
+    font-size: 11px; font-weight: 700; letter-spacing: .15em; margin-bottom: 12px;
+  }
+  .badge-sub { background: var(--ai-pale); color: var(--ai); border: 1px solid var(--ai-light); }
+  .badge-mgr { background: var(--shu-light); color: var(--shu); border: 1px solid var(--shu); }
+  .badge-hr { background: var(--kin-light); color: #8B7130; border: 1px solid var(--kin); }
+  .screen-title { font-family: "Noto Serif JP", serif; font-size: 26px; font-weight: 700; letter-spacing: .08em; }
+  .screen-desc { color: var(--usuzumi); font-size: 14px; margin-top: 8px; }
+
+  /* ========== カード ========== */
+  .card {
+    background: white; border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 28px; margin-bottom: 24px;
+    border: 1px solid rgba(0,0,0,.06);
+    position: relative;
+  }
+  .card-header {
+    font-family: "Noto Serif JP", serif;
+    font-size: 15px; font-weight: 600; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--hakuji);
+    letter-spacing: .05em;
+  }
+  .card-header .deco {
+    width: 4px; height: 20px; border-radius: 2px; background: var(--kin);
+  }
+
+  /* ========== セットアップ画面 ========== */
+  .topic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+  .topic-card {
+    border: 1px solid rgba(0,0,0,.1); border-radius: var(--radius);
+    padding: 24px 16px; cursor: pointer; transition: all .25s; text-align: center;
+    background: var(--washi);
+  }
+  .topic-card:hover { border-color: var(--ai); background: var(--ai-pale); }
+  .topic-card.selected { border-color: var(--ai); background: var(--ai-pale); box-shadow: 0 0 0 1px var(--ai); }
+  .topic-card .topic-icon { font-size: 28px; margin-bottom: 10px; }
+  .topic-card .topic-label { font-family: "Noto Serif JP", serif; font-weight: 600; font-size: 15px; letter-spacing: .05em; }
+  .topic-card .topic-desc { font-size: 12px; color: var(--usuzumi); margin-top: 4px; }
+
+  .mode-list { display: flex; flex-direction: column; gap: 10px; }
+  .mode-item {
+    display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+    border: 1px solid rgba(0,0,0,.1); border-radius: var(--radius);
+    cursor: pointer; transition: all .25s; background: var(--washi);
+  }
+  .mode-item:hover { border-color: var(--ai); }
+  .mode-item.selected { border-color: var(--ai); background: var(--ai-pale); box-shadow: 0 0 0 1px var(--ai); }
+  .mode-radio {
+    width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--usuzumi);
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    transition: all .25s;
+  }
+  .mode-item.selected .mode-radio { border-color: var(--ai); }
+  .mode-item.selected .mode-radio::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--ai); }
+  .mode-label { font-weight: 600; font-size: 14px; }
+  .mode-desc { font-size: 12px; color: var(--usuzumi); }
+
+  .privacy-note {
+    background: var(--hakuji); border-left: 3px solid var(--ai);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 14px 18px; font-size: 13px; color: var(--sumi-light);
+    margin-top: 24px; display: flex; align-items: flex-start; gap: 10px;
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 32px; border-radius: var(--radius); font-size: 14px;
+    font-weight: 600; border: none; cursor: pointer; transition: all .25s;
+    font-family: "Zen Kaku Gothic New", sans-serif; letter-spacing: .08em;
+  }
+  .btn-primary { background: var(--ai); color: white; }
+  .btn-primary:hover { background: var(--ai-light); }
+  .btn-shu { background: var(--shu); color: white; }
+  .btn-shu:hover { opacity: .9; }
+  .btn-outline { background: white; color: var(--sumi); border: 1px solid var(--usuzumi); }
+  .btn-lg { padding: 16px 32px; font-size: 15px; width: 100%; }
+  .btn-group { display: flex; gap: 12px; margin-top: 28px; }
+
+  /* ========== アイスブレイク画面 ========== */
+  .icebreaker-card {
+    border: 1px solid rgba(0,0,0,.08); border-radius: var(--radius);
+    padding: 18px 22px; margin-bottom: 12px; cursor: pointer;
+    transition: all .25s; display: flex; align-items: flex-start; gap: 16px;
+    background: var(--washi);
+  }
+  .icebreaker-card:hover { border-color: var(--ai); background: var(--ai-pale); }
+  .icebreaker-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--ai); color: white;
+    font-family: "Noto Serif JP", serif;
+    font-weight: 700; font-size: 13px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .icebreaker-text { font-size: 14px; flex: 1; line-height: 1.7; }
+  .icebreaker-tag {
+    font-size: 11px; padding: 2px 10px; border-radius: 2px;
+    background: var(--hakuji); color: var(--usuzumi);
+    border: 1px solid rgba(0,0,0,.06); margin-top: 8px; display: inline-block;
+  }
+
+  .reminder-card {
+    background: var(--kin-light); border-left: 3px solid var(--kin);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 18px 22px; display: flex; align-items: flex-start; gap: 14px;
+  }
+  .reminder-title { font-family: "Noto Serif JP", serif; font-weight: 600; font-size: 14px; color: #8B7130; }
+  .reminder-text { font-size: 13px; color: #6B5A2E; margin-top: 4px; }
+
+  .point-card {
+    background: var(--ai-pale); border-left: 3px solid var(--ai);
+    border-radius: 0 var(--radius) var(--radius) 0; padding: 18px 22px;
+  }
+
+  /* ========== 対話中（ウィスパー）画面 ========== */
+  .whisper-container { display: grid; grid-template-columns: 1fr 320px; gap: 24px; }
+  @media (max-width: 768px) { .whisper-container { grid-template-columns: 1fr; } }
+
+  .live-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 14px; border-radius: 2px; font-size: 12px; font-weight: 600;
+  }
+  .live-badge.recording { background: var(--shu-light); color: var(--shu); border: 1px solid var(--shu); }
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--shu); animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
+
+  .timer {
+    font-family: "Noto Serif JP", serif;
+    font-size: 52px; font-weight: 300; color: var(--sumi);
+    font-variant-numeric: tabular-nums; margin-bottom: 24px; letter-spacing: .05em;
+  }
+
+  .ratio-bar { height: 20px; border-radius: 2px; background: var(--hakuji); overflow: hidden; display: flex; margin-bottom: 8px; }
+  .ratio-mgr { background: var(--shu); transition: width .5s; }
+  .ratio-sub { background: var(--ai); transition: width .5s; }
+  .ratio-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--usuzumi); margin-bottom: 24px; }
+
+  .sentiment-meter { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .sentiment-bar-bg {
+    flex: 1; height: 6px; border-radius: 3px;
+    background: linear-gradient(90deg, var(--shu), var(--kitsune), var(--matcha));
+    position: relative;
+  }
+  .sentiment-indicator {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: white; border: 3px solid var(--matcha);
+    position: absolute; top: -4px; transition: left .5s; box-shadow: var(--shadow);
+  }
+
+  .whisper-panel { display: flex; flex-direction: column; gap: 12px; }
+  .whisper-label {
+    font-family: "Noto Serif JP", serif; font-size: 13px; font-weight: 600;
+    color: var(--ai); margin-bottom: 4px; letter-spacing: .1em;
+  }
+  .whisper-bubble {
+    border-radius: var(--radius); padding: 14px 16px;
+    font-size: 13px; line-height: 1.7; animation: fadeIn .3s;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .whisper-tip { background: var(--matcha-light); border-left: 3px solid var(--matcha); }
+  .whisper-warn { background: #FFF8ED; border-left: 3px solid var(--kitsune); }
+  .whisper-info { background: var(--ai-pale); border-left: 3px solid var(--ai); }
+  .whisper-time { font-size: 11px; opacity: .5; margin-top: 6px; }
+
+  .transcript-line { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--hakuji); font-size: 13px; }
+  .transcript-speaker {
+    font-weight: 600; font-size: 11px; padding: 2px 10px; border-radius: 2px;
+    height: fit-content; white-space: nowrap; letter-spacing: .05em;
+  }
+  .speaker-mgr { background: var(--shu-light); color: var(--shu); }
+  .speaker-sub { background: var(--ai-pale); color: var(--ai); }
+
+  /* ========== フィードバック画面 ========== */
+  .stars { display: flex; gap: 10px; margin: 16px 0; justify-content: center; }
+  .star {
+    font-size: 36px; cursor: pointer; transition: all .2s;
+    filter: grayscale(1) opacity(.25); display: flex; align-items: center; justify-content: center;
+  }
+  .star.active { filter: none; }
+  .star:hover { transform: scale(1.15); }
+
+  textarea {
+    width: 100%; border: 1px solid rgba(0,0,0,.12); border-radius: var(--radius);
+    padding: 14px; font-size: 14px; resize: vertical; min-height: 100px;
+    font-family: "Zen Kaku Gothic New", sans-serif; background: var(--washi);
+    line-height: 1.8;
+  }
+  textarea:focus { outline: none; border-color: var(--ai); box-shadow: 0 0 0 2px rgba(27,73,101,.1); }
+
+  .next-schedule {
+    background: var(--matcha-light); border-left: 3px solid var(--matcha);
+    border-radius: 0 var(--radius) var(--radius) 0; padding: 18px 22px;
+  }
+  .next-schedule-title { font-family: "Noto Serif JP", serif; font-weight: 600; color: var(--matcha); font-size: 14px; }
+  .next-schedule-detail { font-size: 13px; color: #3D5A3F; margin-top: 6px; }
+
+  /* ========== コーチングレポート ========== */
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+  @media (max-width: 768px) { .stat-grid { grid-template-columns: 1fr; } }
+  .stat-card {
+    background: white; border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 24px; text-align: center; border: 1px solid rgba(0,0,0,.06);
+  }
+  .stat-value { font-family: "Noto Serif JP", serif; font-size: 40px; font-weight: 700; }
+  .stat-value.good { color: var(--matcha); }
+  .stat-value.warn { color: var(--kitsune); }
+  .stat-value.bad { color: var(--shu); }
+  .stat-label { font-size: 12px; color: var(--usuzumi); margin-top: 4px; letter-spacing: .05em; }
+  .stat-trend { font-size: 12px; margin-top: 8px; font-weight: 600; }
+  .trend-up { color: var(--matcha); }
+  .trend-down { color: var(--shu); }
+
+  .chart-area { position: relative; height: 180px; margin-bottom: 12px; display: flex; align-items: flex-end; justify-content: center; gap: 20px; padding: 0 16px 24px; }
+  .chart-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .chart-bar-group { display: flex; gap: 3px; align-items: flex-end; }
+  .chart-bar { width: 20px; border-radius: 2px 2px 0 0; transition: height .5s; }
+  .chart-month { font-size: 11px; color: var(--usuzumi); font-family: "Noto Serif JP", serif; }
+  .chart-legend { display: flex; gap: 20px; font-size: 11px; color: var(--usuzumi); justify-content: center; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; vertical-align: middle; margin-right: 4px; }
+
+  .topic-bar-container { display: flex; gap: 4px; margin-bottom: 14px; height: 32px; border-radius: var(--radius); overflow: hidden; }
+  .topic-bar { display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: white; padding: 0 8px; white-space: nowrap; }
+
+  .suggestion-list { display: flex; flex-direction: column; gap: 14px; }
+  .suggestion-item {
+    display: flex; gap: 14px; padding: 16px 18px; border-radius: var(--radius);
+    border: 1px solid rgba(0,0,0,.06); background: var(--washi);
+  }
+  .suggestion-priority { width: 4px; border-radius: 2px; flex-shrink: 0; }
+  .priority-high { background: var(--shu); }
+  .priority-med { background: var(--kitsune); }
+  .priority-low { background: var(--matcha); }
+  .suggestion-title { font-weight: 600; font-size: 14px; }
+  .suggestion-text { font-size: 13px; color: var(--sumi-light); margin-top: 4px; }
+
+  /* ========== ダッシュボード ========== */
+  .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 768px) { .dash-grid { grid-template-columns: 1fr; } }
+  .dash-full { grid-column: 1 / -1; }
+
+  .alert-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 14px 18px; border-radius: var(--radius); margin-bottom: 10px;
+    font-size: 13px;
+  }
+  .alert-danger { background: var(--shu-light); border-left: 3px solid var(--shu); }
+  .alert-warning { background: var(--kin-light); border-left: 3px solid var(--kin); }
+  .alert-info { background: var(--matcha-light); border-left: 3px solid var(--matcha); }
+  .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .alert-dept { font-weight: 700; }
+
+  .score-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 0; border-bottom: 1px solid var(--hakuji);
+  }
+  .score-row:last-child { border-bottom: none; }
+  .score-avatar {
+    width: 38px; height: 38px; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: "Noto Serif JP", serif; font-weight: 700; font-size: 14px;
+    color: white; flex-shrink: 0;
+  }
+  .score-name { font-weight: 600; font-size: 14px; flex: 1; }
+  .score-dept { font-size: 11px; color: var(--usuzumi); }
+  .score-badge {
+    padding: 4px 12px; border-radius: 2px; font-size: 12px;
+    font-family: "Noto Serif JP", serif; font-weight: 700;
+  }
+  .score-A { background: var(--matcha-light); color: var(--matcha); }
+  .score-B { background: var(--ai-pale); color: var(--ai); }
+  .score-C { background: var(--kin-light); color: #8B7130; }
+  .score-D { background: var(--shu-light); color: var(--shu); }
+  .mq-num { font-family: "Noto Serif JP", serif; font-weight: 700; font-size: 15px; width: 40px; text-align: right; }
+  .type-tag {
+    font-size: 10px; padding: 3px 10px; border-radius: 2px;
+    white-space: nowrap; letter-spacing: .05em; border: 1px solid rgba(0,0,0,.08);
+    background: var(--washi);
+  }
+
+  .talent-card {
+    border: 1px solid rgba(0,0,0,.08); border-radius: var(--radius);
+    padding: 18px; margin-bottom: 14px;
+    display: flex; align-items: flex-start; gap: 14px; background: var(--washi);
+  }
+  .talent-avatar {
+    width: 44px; height: 44px; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: "Noto Serif JP", serif; font-weight: 700; font-size: 16px;
+    color: white; flex-shrink: 0;
+  }
+  .talent-name { font-weight: 600; font-size: 14px; }
+  .talent-dept { font-size: 11px; color: var(--usuzumi); }
+  .talent-gap { display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
+  .talent-metric { font-size: 12px; }
+  .talent-metric span { font-weight: 700; }
+  .talent-flag { font-size: 12px; color: var(--shu); font-weight: 600; margin-top: 8px; }
+
+  /* ========== 装飾：青海波パターン ========== */
+  .seigaiha-divider {
+    height: 24px; margin: 12px 0 28px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20'%3E%3Cpath d='M0 20 Q10 0 20 20 Q30 0 40 20' fill='none' stroke='%23C4A35A' stroke-width='.5' opacity='.3'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-position: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- ナビゲーション -->
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="logo-mark">環</div>
+    AXOL Loop
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showScreen('setup')">壱 ─ 準備</button>
+    <button class="nav-tab" onclick="showScreen('icebreak')">弐 ─ 対話前</button>
+    <button class="nav-tab" onclick="showScreen('whisper')">参 ─ 対話中</button>
+    <button class="nav-tab" onclick="showScreen('feedback')">肆 ─ 振返り</button>
+    <button class="nav-tab" onclick="showScreen('coaching')">伍 ─ 報告</button>
+    <button class="nav-tab" onclick="showScreen('dashboard')">陸 ─ 組織</button>
+  </div>
+</nav>
+
+<!-- ① 部下: セットアップ画面 -->
+<div id="setup" class="screen active">
+  <div class="screen-header">
+    <span class="screen-badge badge-sub">部下側画面</span>
+    <h1 class="screen-title serif">一対一の準備</h1>
+    <p class="screen-desc">次回の 1on1 に向けて、話したいテーマと上司に期待する対応を選んでください。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="deco"></div> 今日の話題を選ぶ</div>
+    <div class="topic-grid">
+      <div class="topic-card" onclick="selectTopic(this)">
+        <div class="topic-icon">📊</div>
+        <div class="topic-label serif">業務進捗</div>
+        <div class="topic-desc">プロジェクトの状況や課題</div>
+      </div>
+      <div class="topic-card selected" onclick="selectTopic(this)">
+        <div class="topic-icon">🚀</div>
+        <div class="topic-label serif">キャリア</div>
+        <div class="topic-desc">将来の目標やスキルアップ</div>
+      </div>
+      <div class="topic-card" onclick="selectTopic(this)">
+        <div class="topic-icon">🤝</div>
+        <div class="topic-label serif">人間関係</div>
+        <div class="topic-desc">チーム内のコミュニケーション</div>
+      </div>
+      <div class="topic-card" onclick="selectTopic(this)">
+        <div class="topic-icon">🏠</div>
+        <div class="topic-label serif">プライベート</div>
+        <div class="topic-desc">仕事以外で気になること</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="deco"></div> 上司に期待する対応</div>
+    <div class="mode-list">
+      <div class="mode-item" onclick="selectMode(this)">
+        <div class="mode-radio"></div>
+        <div><div class="mode-label">助言がほしい</div><div class="mode-desc">経験に基づいたアドバイスを聞きたい</div></div>
+      </div>
+      <div class="mode-item selected" onclick="selectMode(this)">
+        <div class="mode-radio"></div>
+        <div><div class="mode-label">傾聴してほしい</div><div class="mode-desc">まずはしっかり話を聞いてほしい</div></div>
+      </div>
+      <div class="mode-item" onclick="selectMode(this)">
+        <div class="mode-radio"></div>
+        <div><div class="mode-label">一緒に考えてほしい</div><div class="mode-desc">答えは出なくても、一緒に整理したい</div></div>
+      </div>
+      <div class="mode-item" onclick="selectMode(this)">
+        <div class="mode-radio"></div>
+        <div><div class="mode-label">議論したい</div><div class="mode-desc">意見をぶつけ合って深めたい</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="privacy-note">
+    <span style="flex-shrink:0;">🔒</span>
+    <div>
+      <strong>安心のお知らせ</strong> ─ あなたの選択は 1on1 の質を高めるためにのみ使用されます。査定や評価には一切影響しません。上司にはトピックのカテゴリのみ共有されます。
+    </div>
+  </div>
+
+  <div class="btn-group" style="justify-content: flex-end;">
+    <button class="btn btn-primary">準備完了 →</button>
+  </div>
+</div>
+
+<!-- ② 上司: アイスブレイク画面 -->
+<div id="icebreak" class="screen">
+  <div class="screen-header">
+    <span class="screen-badge badge-mgr">上司側画面</span>
+    <h1 class="screen-title serif">対話の手引き</h1>
+    <p class="screen-desc">田中 太郎 さんとの 1on1（14:00〜）に向けた AI からの提案です。</p>
+  </div>
+
+  <div class="reminder-card" style="margin-bottom: 24px;">
+    <span style="font-size:20px;flex-shrink:0;">📚</span>
+    <div>
+      <div class="reminder-title serif">教育進捗のお知らせ</div>
+      <div class="reminder-text">田中さんは「React 応用」の習得で躓いている可能性があります（Lv.2 → Lv.3 の進捗が 2 ヶ月停滞中）。進捗を確認してみてください。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="deco"></div> きっかけの三問</div>
+    <p style="font-size:13px;color:var(--usuzumi);margin-bottom:18px;">田中さんが「キャリア」をトピックに、「傾聴してほしい」を希望しています。</p>
+
+    <div class="icebreaker-card">
+      <div class="icebreaker-num">壱</div>
+      <div class="icebreaker-text">
+        前回の 1on1 で「フロントエンドのスペシャリストを目指したい」とおっしゃっていましたが、その後何か進展や気持ちの変化はありましたか？
+        <div><span class="icebreaker-tag">前回の 1on1 メモより</span></div>
+      </div>
+    </div>
+    <div class="icebreaker-card">
+      <div class="icebreaker-num">弐</div>
+      <div class="icebreaker-text">
+        最近の日報で新しいライブラリの調査を担当されていましたね。技術的なチャレンジの中で、今後に活かせそうだと感じたことはありますか？
+        <div><span class="icebreaker-tag">直近の日報より</span></div>
+      </div>
+    </div>
+    <div class="icebreaker-card">
+      <div class="icebreaker-num">参</div>
+      <div class="icebreaker-text">
+        半年後の自分がどんな状態だったら「順調だ」と感じますか？具体的なイメージがあれば聞かせてください。
+        <div><span class="icebreaker-tag">キャリア深掘り質問</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="point-card" style="margin-bottom:24px;">
+    <div style="font-family:'Noto Serif JP',serif;font-weight:600;color:var(--ai);margin-bottom:6px;">心得</div>
+    <p style="font-size:13px;color:var(--ai);">田中さんは「傾聴してほしい」を選んでいます。助言よりも、まずは話をしっかり聞くことを意識してください。発話比率は <strong>三〜四割以内</strong> を目標にしましょう。</p>
+  </div>
+
+  <button class="btn btn-shu btn-lg">対話を始める</button>
+</div>
+
+<!-- ③ 上司: 対話中（AI ウィスパー） -->
+<div id="whisper" class="screen">
+  <div class="screen-header">
+    <span class="screen-badge badge-mgr">上司専用画面</span>
+    <h1 class="screen-title serif">対話進行中</h1>
+    <p class="screen-desc">田中 太郎 さんとのセッション ─ AI がそっと寄り添います。</p>
+  </div>
+
+  <div class="whisper-container">
+    <div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <span class="live-badge recording"><span class="live-dot"></span> 録音中</span>
+          <span style="font-size:12px;color:var(--usuzumi);">対話相手: 田中 太郎</span>
+        </div>
+        <div class="timer">00:23:47</div>
+
+        <div style="margin-bottom:24px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:8px;">
+            <span style="color:var(--shu);">あなた 32 %</span>
+            <span style="color:var(--ai);">田中さん 68 %</span>
+          </div>
+          <div class="ratio-bar">
+            <div class="ratio-mgr" style="width:32%;"></div>
+            <div class="ratio-sub" style="width:68%;"></div>
+          </div>
+          <div class="ratio-labels">
+            <span>目標: 30〜40 %</span>
+            <span style="color:var(--matcha);font-weight:600;">✓ 良い比率です</span>
+          </div>
+        </div>
+
+        <div style="margin-bottom:24px;">
+          <div style="font-size:12px;font-weight:600;margin-bottom:10px;">本音度（納得感）</div>
+          <div class="sentiment-meter">
+            <span style="font-size:11px;color:var(--usuzumi);">低</span>
+            <div class="sentiment-bar-bg">
+              <div class="sentiment-indicator" style="left:72%;"></div>
+            </div>
+            <span style="font-size:11px;color:var(--usuzumi);">高</span>
+          </div>
+          <div style="font-size:12px;color:var(--matcha);text-align:center;margin-top:6px;">本音で話せている様子です</div>
+        </div>
+
+        <div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:10px;">書き起こし</div>
+          <div style="max-height:200px;overflow-y:auto;border:1px solid var(--hakuji);border-radius:var(--radius);padding:12px;background:var(--washi);">
+            <div class="transcript-line">
+              <span class="transcript-speaker speaker-sub">田中</span>
+              <span>正直なところ、今のままフロントだけやっていていいのか迷っていて…</span>
+            </div>
+            <div class="transcript-line">
+              <span class="transcript-speaker speaker-mgr">上司</span>
+              <span>迷っている、というのはどういう感覚ですか？</span>
+            </div>
+            <div class="transcript-line">
+              <span class="transcript-speaker speaker-sub">田中</span>
+              <span>バックエンドもできた方がキャリアの幅が広がるのかなって。でも今の仕事も好きだし…</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="whisper-panel">
+      <div class="whisper-label">AI の囁き</div>
+      <div class="whisper-bubble whisper-tip">
+        <strong>傾聴を続けてください</strong><br>
+        田中さんが迷いを打ち明けています。「それはどういう気持ち？」と深掘りすると効果的です。
+        <div class="whisper-time">23:42</div>
+      </div>
+      <div class="whisper-bubble whisper-info">
+        <strong>過去の傾向より</strong><br>
+        前回もキャリアで同様の迷いがありました。「本来の理想は？」と問いかけると整理が進んだ事例があります。
+        <div class="whisper-time">23:30</div>
+      </div>
+      <div class="whisper-bubble whisper-warn">
+        <strong>発話比率のご注意</strong><br>
+        直近 5 分間のあなたの発話比率が 45 % に上昇しています。部下の話を遮っていないか、ご確認ください。
+        <div class="whisper-time">23:15</div>
+      </div>
+      <div class="whisper-bubble whisper-tip">
+        <strong>好機の到来</strong><br>
+        「バックエンドも」という発言を受けて、スキルマップの「React 応用」の進捗確認に自然につなげるチャンスです。
+        <div class="whisper-time">22:58</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ④ 部下: 事後フィードバック -->
+<div id="feedback" class="screen">
+  <div class="screen-header">
+    <span class="screen-badge badge-sub">部下側画面</span>
+    <h1 class="screen-title serif">振り返り</h1>
+    <p class="screen-desc">お疲れさまでした。今回の 1on1 について教えてください。</p>
+  </div>
+
+  <div class="card" style="text-align:center;">
+    <div class="card-header" style="justify-content:center;"><div class="deco"></div> 今回の満足度</div>
+    <div class="stars">
+      <span class="star" onclick="setStars(1)">★</span>
+      <span class="star" onclick="setStars(2)">★</span>
+      <span class="star" onclick="setStars(3)">★</span>
+      <span class="star active" onclick="setStars(4)">★</span>
+      <span class="star" onclick="setStars(5)">★</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--usuzumi);padding:0 20px;">
+      <span>不満</span><span>とても満足</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="deco"></div> 自由記述（任意）</div>
+    <textarea placeholder="今日の 1on1 で感じたことを自由にお書きください…">キャリアの迷いについてじっくり聞いてもらえたのが良かったです。もう少し具体的なステップの話もできたら嬉しいです。</textarea>
+  </div>
+
+  <div class="privacy-note">
+    <span style="flex-shrink:0;">🔒</span>
+    <div>
+      <strong>安心のお知らせ</strong> ─ このフィードバックは査定に直接影響しません。回答は匿名化された上で、マネジメント改善にのみ活用されます。
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:24px;">
+    <div class="card-header"><div class="deco"></div> 次回のご案内</div>
+    <div class="next-schedule">
+      <div class="next-schedule-title">📅 2 月 13 日（木）14:00〜14:30</div>
+      <div class="next-schedule-detail">
+        推奨テーマ:「キャリアパスの具体化 ─ フロントエンド × バックエンドの可能性」<br>
+        <span style="font-size:11px;opacity:.6;">※ 今回の対話内容から AI が提案しました。変更可能です。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-group" style="justify-content:flex-end;">
+    <button class="btn btn-outline">後で回答</button>
+    <button class="btn btn-primary">送信する</button>
+  </div>
+</div>
+
+<!-- ⑤ 上司: コーチングレポート -->
+<div id="coaching" class="screen">
+  <div class="screen-header">
+    <span class="screen-badge badge-mgr">上司側画面</span>
+    <h1 class="screen-title serif">指導報告書</h1>
+    <p class="screen-desc">直近 3 ヶ月間の 1on1 データに基づく AI からの分析・提案です。</p>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-value good">72</div>
+      <div class="stat-label">品質スコア（平均）</div>
+      <div class="stat-trend trend-up">↑ +8 前月比</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--ai);">36%</div>
+      <div class="stat-label">あなたの発話比率</div>
+      <div class="stat-trend trend-up">✓ 理想範囲内</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value warn">3.4</div>
+      <div class="stat-label">部下の平均満足度</div>
+      <div class="stat-trend trend-down">↓ -0.3 前月比</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="deco"></div> 発話比率の推移</div>
+    <div class="chart-area">
+      <div class="chart-col">
+        <div class="chart-bar-group">
+          <div class="chart-bar" style="height:86px;background:var(--shu);opacity:.7;"></div>
+          <div class="chart-bar" style="height:74px;background:var(--ai);opacity:.5;"></div>
+        </div>
+        <div class="chart-month">10 月</div>
+      </div>
+      <div class="chart-col">
+        <div class="chart-bar-group">
+          <div class="chart-bar" style="height:72px;background:var(--shu);opacity:.7;"></div>
+          <div class="chart-bar" style="height:88px;background:var(--ai);opacity:.5;"></div>
+        </div>
+        <div class="chart-month">11 月</div>
+      </div>
+      <div class="chart-col">
+        <div class="chart-bar-group">
+          <div class="chart-bar" style="height:54px;background:var(--shu);opacity:.7;"></div>
+          <div class="chart-bar" style="height:106px;background:var(--ai);opacity:.5;"></div>
+        </div>
+        <div class="chart-month">12 月</div>
+      </div>
+      <div class="chart-col">
+        <div class="chart-bar-group">
+          <div class="chart-bar" style="height:46px;background:var(--shu);opacity:.7;"></div>
+          <div class="chart-bar" style="height:114px;background:var(--ai);opacity:.5;"></div>
+        </div>
+        <div class="chart-month">1 月</div>
+      </div>
+      <div class="chart-col">
+        <div class="chart-bar-group">
+          <div class="chart-bar" style="height:42px;background:var(--shu);opacity:.7;"></div>
+          <div class="chart-bar" style="height:118px;background:var(--ai);opacity:.5;"></div>
+        </div>
+        <div class="chart-month">2 月</div>
+      </div>
+    </div>
+    <div class="chart-legend">
+      <span><span class="legend-dot" style="background:var(--shu);opacity:.7;"></span>上司</span>
+      <span><span class="legend-dot" style="background:var(--ai);opacity:.5;"></span>部下</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="deco"></div> 話題の分布</div>
+    <div class="topic-bar-container">
+      <div class="topic-bar" style="flex:5;background:var(--ai);">業務進捗 50 %</div>
+      <div class="topic-bar" style="flex:3.3;background:var(--fuji);">キャリア 33 %</div>
+      <div class="topic-bar" style="flex:1;background:var(--kitsune);">人間関係 10 %</div>
+      <div class="topic-bar" style="flex:.7;background:var(--usuzumi);">他 7 %</div>
+    </div>
+    <p style="font-size:12px;color:var(--usuzumi);">「人間関係」と「プライベート」の話題が少ない傾向です。意識的に話題を振ることで、信頼スコアの向上が期待できます。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="deco"></div> AI からの改善提案</div>
+    <div class="suggestion-list">
+      <div class="suggestion-item">
+        <div class="suggestion-priority priority-high"></div>
+        <div>
+          <div class="suggestion-title">「人間関係」の話題で満足度が低下する傾向</div>
+          <div class="suggestion-text">直近 3 回で「人間関係」に触れた際、満足度が平均 2.5 に低下しています。次回は「一緒に考える」姿勢を意識し、解決策の提示よりも共感と整理を優先してください。</div>
+        </div>
+      </div>
+      <div class="suggestion-item">
+        <div class="suggestion-priority priority-med"></div>
+        <div>
+          <div class="suggestion-title">深掘り質問の頻度を増やす</div>
+          <div class="suggestion-text">オープンクエスチョンの頻度が社内平均の 60 % です。「具体的には？」「例えば？」を増やすと、部下の思考整理が進みます。</div>
+        </div>
+      </div>
+      <div class="suggestion-item">
+        <div class="suggestion-priority priority-low"></div>
+        <div>
+          <div class="suggestion-title">スキルマップの定期更新を</div>
+          <div class="suggestion-text">田中さんのスキルマップが 2 ヶ月間更新されていません。次回の 1on1 で進捗を確認し、更新の時間を設けてください。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ⑥ 管理者・人事: 組織ダッシュボード -->
+<div id="dashboard" class="screen">
+  <div class="screen-header">
+    <span class="screen-badge badge-hr">人事・管理者画面</span>
+    <h1 class="screen-title serif">組織概覧</h1>
+    <p class="screen-desc">全社の 1on1 実施状況とマネジメント品質の分析です。</p>
+  </div>
+
+  <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--ai);">94%</div>
+      <div class="stat-label">実施率（今月）</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value good">68</div>
+      <div class="stat-label">全社平均 MQ</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value warn">3</div>
+      <div class="stat-label">要注意</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--fuji);">5</div>
+      <div class="stat-label">埋もれた才能</div>
+    </div>
+  </div>
+
+  <div class="dash-grid">
+    <div class="card dash-full">
+      <div class="card-header"><div class="deco" style="background:var(--shu);"></div> 注意報</div>
+      <div class="alert-item alert-danger">
+        <span class="alert-icon">●</span>
+        <div><span class="alert-dept">営業二課 ─ 佐藤 部長</span>: 部下の満足度が 3 ヶ月連続低下。過負荷の疑いあり。</div>
+      </div>
+      <div class="alert-item alert-warning">
+        <span class="alert-icon">●</span>
+        <div><span class="alert-dept">開発一課</span>: 直近 3 回の 1on1 が全て「業務進捗」のみ。形骸化の兆候。</div>
+      </div>
+      <div class="alert-item alert-warning">
+        <span class="alert-icon">●</span>
+        <div><span class="alert-dept">マーケ課 ─ 鈴木 課長</span>: MQ スコアが前月比 -18 pt。急激な下降を検出。</div>
+      </div>
+      <div class="alert-item alert-info">
+        <span class="alert-icon">●</span>
+        <div><span class="alert-dept">CS 課 ─ 高橋 課長</span>: MQ スコアが 3 ヶ月連続上昇（+22 pt）。改善が順調。</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="deco"></div> 管理職の適性一覧</div>
+      <div class="score-row">
+        <div class="score-avatar" style="background:var(--matcha);">高</div>
+        <div><div class="score-name">高橋 美咲</div><div class="score-dept">CS 課</div></div>
+        <span class="type-tag">秀 ─ 理想型</span>
+        <div class="mq-num" style="color:var(--matcha);">82</div>
+        <span class="score-badge score-A">甲</span>
+      </div>
+      <div class="score-row">
+        <div class="score-avatar" style="background:var(--ai);">山</div>
+        <div><div class="score-name">山本 健一</div><div class="score-dept">開発二課</div></div>
+        <span class="type-tag">良 ─ 標準型</span>
+        <div class="mq-num" style="color:var(--ai);">64</div>
+        <span class="score-badge score-B">乙</span>
+      </div>
+      <div class="score-row">
+        <div class="score-avatar" style="background:var(--kitsune);">鈴</div>
+        <div><div class="score-name">鈴木 大輔</div><div class="score-dept">マーケ課</div></div>
+        <span class="type-tag">可 ─ 支援型</span>
+        <div class="mq-num" style="color:var(--kitsune);">52</div>
+        <span class="score-badge score-C">丙</span>
+      </div>
+      <div class="score-row">
+        <div class="score-avatar" style="background:var(--shu);">佐</div>
+        <div><div class="score-name">佐藤 剛</div><div class="score-dept">営業二課</div></div>
+        <span class="type-tag">危 ─ 要改善</span>
+        <div class="mq-num" style="color:var(--shu);">38</div>
+        <span class="score-badge score-D">丁</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="deco" style="background:var(--fuji);"></div> 埋もれた才能の検知</div>
+      <p style="font-size:12px;color:var(--usuzumi);margin-bottom:16px;">成果と評価の乖離が大きい社員です。正当に評価されていない可能性があります。</p>
+
+      <div class="talent-card">
+        <div class="talent-avatar" style="background:var(--fuji);">中</div>
+        <div>
+          <div class="talent-name">中村 優子</div>
+          <div class="talent-dept">営業二課 / 佐藤 部長 配下</div>
+          <div class="talent-gap">
+            <div class="talent-metric">客観成果: <span style="color:var(--matcha);">85</span></div>
+            <div class="talent-metric">上司評価: <span style="color:var(--shu);">42</span></div>
+            <div class="talent-metric">乖離: <span style="color:var(--shu);">-43</span></div>
+          </div>
+          <div class="talent-flag">⚠ 3 ヶ月連続で乖離を検出（確認促進段階）</div>
+        </div>
+      </div>
+      <div class="talent-card">
+        <div class="talent-avatar" style="background:var(--asagi);">木</div>
+        <div>
+          <div class="talent-name">木下 翔太</div>
+          <div class="talent-dept">開発一課 / 伊藤 課長 配下</div>
+          <div class="talent-gap">
+            <div class="talent-metric">客観成果: <span style="color:var(--matcha);">78</span></div>
+            <div class="talent-metric">上司評価: <span style="color:var(--kitsune);">51</span></div>
+            <div class="talent-metric">乖離: <span style="color:var(--kitsune);">-27</span></div>
+          </div>
+          <div class="talent-flag" style="color:var(--kitsune);">👀 初回の乖離検出（観察段階）</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo(0, 0);
+}
+function selectTopic(el) {
+  el.parentElement.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function selectMode(el) {
+  el.parentElement.querySelectorAll('.mode-item').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function setStars(n) {
+  document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('active', i < n));
+}
+</script>
+
+</body>
+</html>
