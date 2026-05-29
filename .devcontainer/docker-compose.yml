@@ -1,0 +1,108 @@
+services:
+  al:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: al
+    volumes:
+      - ..:/workspace:cached
+    ports:
+      - "${AL_PORT:-29001}:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=mysql://axolloop:axolloop@aldb:3306/axolloop
+      - REDIS_URL=redis://alredis:6379
+      - MAIL_HOST=smtpal
+      - MAIL_PORT=1025
+      - S3_ENDPOINT=http://s3altal:9000
+      - S3_ACCESS_KEY=minioadmin
+      - S3_SECRET_KEY=minioadmin
+      - S3_BUCKET=axolloop
+    depends_on:
+      aldb:
+        condition: service_healthy
+      alredis:
+        condition: service_healthy
+      smtpal:
+        condition: service_started
+      s3altal:
+        condition: service_healthy
+    networks:
+      - al-network
+    command: sleep infinity
+
+  aldb:
+    image: mysql:8.0
+    container_name: aldb
+    ports:
+      - "${ALDB_PORT:-29002}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: axolloop
+      MYSQL_USER: axolloop
+      MYSQL_PASSWORD: axolloop
+    volumes:
+      - aldb-data:/var/lib/mysql
+      - ../docker/database/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - al-network
+
+  smtpal:
+    image: axllent/mailpit:latest
+    container_name: smtpal
+    ports:
+      - "${SMTPAL_PORT:-29003}:8025"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    networks:
+      - al-network
+
+  s3altal:
+    image: minio/minio:latest
+    container_name: s3altal
+    ports:
+      - "${S3ALTAL_PORT:-29004}:9001"
+      - "${S3ALTAL_API_PORT:-29006}:9000"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - s3altal-data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - al-network
+
+  alredis:
+    image: redis:7-alpine
+    container_name: alredis
+    ports:
+      - "${ALREDIS_PORT:-29005}:6379"
+    volumes:
+      - alredis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - al-network
+
+volumes:
+  aldb-data:
+  s3altal-data:
+  alredis-data:
+
+networks:
+  al-network:
+    driver: bridge

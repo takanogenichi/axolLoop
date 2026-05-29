@@ -1,1 +1,26 @@
 .idea/
+
+# 環境変数（自動生成）
+.env
+.devcontainer/.env
+.devcontainer/socat-forwards.sh
+
+# Node.js
+node_modules/
+dist/
+.nuxt/
+.output/
+*.tsbuildinfo
+
+# パッケージマネージャ
+pnpm-debug.log*
+
+# テスト
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker ボリューム
+docker/database/data/

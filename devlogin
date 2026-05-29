@@ -1,0 +1,14 @@
+#!/bin/bash
+# HOST → al コンテナログイン用スクリプト
+# DevContainer 起動済みの状態で使用してください
+
+CONTAINER_NAME="al"
+
+if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+  echo "エラー: コンテナ '${CONTAINER_NAME}' が起動していません"
+  echo "VS Code で 'Dev Containers: Reopen in Container' を実行してください"
+  exit 1
+fi
+
+echo "al コンテナにログインします..."
+docker exec -it -u node -w /workspace "$CONTAINER_NAME" zsh

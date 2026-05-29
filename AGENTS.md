@@ -1,6 +1,6 @@
-# AXOLコンバートシステム（Axol28以降）
+# AXOL Loop（1on1 マネジメント支援システム）
 
-このレポジトリは、Mynavi/Airwork/CareerTasuからクローリングまたはAPIによって応募者のCSVをダウンロードし、それをアクセスオンラインに投入するシステムです
+AI を活用した 1on1 面談の品質向上・マネジメント評価支援システムです。
 
 # 基本ルール
 
@@ -49,51 +49,48 @@ tasks/
 
 # 技術スタック
 
-- **PHP 8.4** / **Laravel 12** / **MySQL 8**
-- Docker Compose によるローカル開発環境
-- PHPStan レベル6（ベースライン付き）、PHPUnit 11
-- SQS キュー（ローカルは SQSエミュレータ）、S3 ストレージ（ローカルは S3エミュレータ）
+- **NestJS**（Node.js 20 LTS+ / TypeScript）
+- **Nuxt 3**（Vue 3 + TypeScript）フロントエンド
+- **Prisma** ORM / **MySQL 8**（Aurora MySQL 互換）
+- **Redis 7**（BullMQ 非同期ジョブ + キャッシュ）
+- **MinIO**（S3 互換ストレージ・ローカル開発用）
+- Docker Compose による DevContainer 開発環境
+- pnpm パッケージマネージャ
 
 # コンテナ構成
 
-## 独立コンテナ（従来方式）
-
-| コンテナ | 用途 | ポート |
+| コンテナ | 用途 | DevContainer(inst.1) |
 |---|---|---|
-| `ac3` | PHP 8.4 + Apache（メイン開発コンテナ） | `28991` |
-| `ac3db` | MySQL 8 | `28992` |
-| `smtpac3` | Mailpit（メール確認） | `28993`（Web UI） |
-| `s3altac3` | S3エミュレータ | `28994`（Web UI） |
-| `sqsac3` | SQSエミュレータ | `28995`（Web UI） |
-| `tfliteac3` | tflite（Terraform Lite） | − |
-
-セットアップ: `make init`
+| `al` | Node.js 20（NestJS + Nuxt 3 メインアプリ） | `29001` |
+| `aldb` | MySQL 8 | `29002` |
+| `smtpal` | Mailpit（メール確認 Web UI） | `29003` |
+| `s3altal` | MinIO（S3 エミュレータ Web UI） | `29004` |
+| `alredis` | Redis 7（BullMQ + キャッシュ） | `29005` |
 
 ## DevContainer
 
 DevContainer では `make setup` でインスタンス番号（1〜8）を指定し、ポートを `+10` ずつオフセットする。
 
-| インスタンス | offset | ac3 | ac3db | smtpac3 | s3altac3 | sqsac3 |
+| インスタンス | offset | al | aldb | smtpal | s3altal | alredis |
 |---|---|---|---|---|---|---|
-| 1 | 0 | 28901 | 28902 | 28903 | 28904 | 28905 |
-| 2 | +10 | 28911 | 28912 | 28913 | 28914 | 28915 |
-| 3 | +20 | 28921 | 28922 | 28923 | 28924 | 28925 |
+| 1 | 0 | 29001 | 29002 | 29003 | 29004 | 29005 |
+| 2 | +10 | 29011 | 29012 | 29013 | 29014 | 29015 |
+| 3 | +20 | 29021 | 29022 | 29023 | 29024 | 29025 |
 | ... | ... | ... | ... | ... | ... | ... |
+| 8 | +70 | 29071 | 29072 | 29073 | 29074 | 29075 |
 
 セットアップ手順:
 
 1. `make setup` → インスタンス番号を入力（`.env`、`.devcontainer/.env`、`socat-forwards.sh` が自動生成される）
 2. VS Code で「Reopen in Container」を実行
-3. HOST側からのターミナルでのログインは `./devlogin`
+3. HOST 側からのターミナルでのログインは `./devlogin`
 
 # テスト
 
-- `make test` で全テストを実行（Docker内で実行される）
-- `make stan` でPHPStan静的解析を実行
-- テストメソッド名には `test01_01` のような連番プレフィクスを付与する
-- DB接続が必要なテストは `tests/TestUtil/TestCaseAbstract.php` を継承する（`DatabaseTransactions` トレイト付き）
-- テストディレクトリ構成: `tests/Unit/`、`tests/Feature/`、`tests/Commands/`、`tests/Service/`
-- `pre-push` gitフックでPHPStanが自動実行される（`make init_hook` で初期化）
+- `make test` で全テストを実行（Docker 内で実行される）
+- `make lint` で ESLint 静的解析を実行
+- `make typecheck` で TypeScript 型チェックを実行
+- テストディレクトリ構成: `tests/unit/`、`tests/integration/`、`tests/e2e/`
 
 # ドキュメント
 
@@ -101,8 +98,7 @@ DevContainer では `make setup` でインスタンス番号（1〜8）を指定
 |---|---|
 | [アーキテクチャガイド](docs/ai/architecture-guide.md) | リポジトリ構成・コンテナ構成・ディレクトリ構造 |
 | [コマンドガイド](docs/ai/command-guide.md) | Make コマンド・テスト実行・コンテナログイン |
-| [PHPコーディングガイド](docs/ai/php-coding-guide.md) | コーディング規約・Laravel-Data実装ルール |
-| [PRガイド](docs/ai/pr-guide.md) | ブランチ命名規則・PR管理 |
+| [PR ガイド](docs/ai/pr-guide.md) | ブランチ命名規則・PR 管理 |
 | [レビューガイド](docs/ai/review-guide.md) | レビュー方針・prefix・優先確認箇所 |
-| [PRレビューワークフロー](docs/ai/copilot-review-workflow.md) | Copilot + gh CLI を使ったPRレビュー手順 |
-| [仕様書](docs/specs/) | 同一人物判定、セミナー重複、エアワーク同日除外等の仕様 |
+| [PR レビューワークフロー](docs/ai/copilot-review-workflow.md) | Copilot + gh CLI を使った PR レビュー手順 |
+| [仕様書](docs/) | 機能設計、MQ スコアリング、音声処理、DB 設計等 |
