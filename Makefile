@@ -93,7 +93,7 @@ redis: ## Redis コンテナにログイン
 	@redis-cli -h alredis
 
 minio: ## MinIO コンテナにログイン
-	@docker exec -it s3altal sh
+	@docker exec -it s3altal-$$(grep -E '^INSTANCE=' .devcontainer/.env 2>/dev/null | cut -d= -f2 || echo 1) sh
 
 ##@ その他
 logd: ## Docker Compose ログを tail

@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: al
+    container_name: al-${INSTANCE:-1}
     volumes:
       - ..:/workspace:cached
     ports:
@@ -33,7 +33,7 @@ services:
 
   aldb:
     image: mysql:8.0
-    container_name: aldb
+    container_name: aldb-${INSTANCE:-1}
     ports:
       - "${ALDB_PORT:-29002}:3306"
     environment:
@@ -54,7 +54,7 @@ services:
 
   smtpal:
     image: axllent/mailpit:latest
-    container_name: smtpal
+    container_name: smtpal-${INSTANCE:-1}
     ports:
       - "${SMTPAL_PORT:-29003}:8025"
     environment:
@@ -65,7 +65,7 @@ services:
 
   s3altal:
     image: minio/minio:latest
-    container_name: s3altal
+    container_name: s3altal-${INSTANCE:-1}
     ports:
       - "${S3ALTAL_PORT:-29004}:9001"
       - "${S3ALTAL_API_PORT:-29006}:9000"
@@ -85,7 +85,7 @@ services:
 
   alredis:
     image: redis:7-alpine
-    container_name: alredis
+    container_name: alredis-${INSTANCE:-1}
     ports:
       - "${ALREDIS_PORT:-29005}:6379"
     volumes:
