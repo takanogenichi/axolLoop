@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     vim \
     zsh \
     socat \
-    mysql-client \
+    default-mysql-client \
     jq \
     && rm -rf /var/lib/apt/lists/*
 
