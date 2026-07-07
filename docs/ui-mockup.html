@@ -51,20 +51,21 @@
   .nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     background: var(--ai);
-    border-bottom: 2px solid var(--kin);
+    border-bottom: 2px solid var(--ai-light);
     display: flex; align-items: center; height: 60px; padding: 0 28px; gap: 28px;
   }
   .nav-logo {
     font-family: "Noto Serif JP", serif;
-    font-weight: 700; font-size: 20px; color: var(--kin);
+    font-weight: 700; font-size: 20px; color: #FFFFFF;
     display: flex; align-items: center; gap: 10px; white-space: nowrap;
     letter-spacing: .1em;
   }
   .nav-logo .logo-mark {
     width: 32px; height: 32px; border-radius: 50%;
-    background: var(--kin); color: var(--ai);
+    background: rgba(255,255,255,.15); color: #FFFFFF;
     display: flex; align-items: center; justify-content: center;
     font-size: 18px; font-weight: 700;
+    border: 2px solid rgba(255,255,255,.4);
   }
   .nav-tabs { display: flex; gap: 2px; overflow-x: auto; }
   .nav-tab {
@@ -75,7 +76,7 @@
   }
   .nav-tab:hover { color: rgba(255,255,255,.9); }
   .nav-tab.active {
-    color: var(--kin); border-bottom-color: var(--kin); font-weight: 700;
+    color: #FFFFFF; border-bottom-color: #FFFFFF; font-weight: 700;
   }
 
   /* ========== 画面共通 ========== */
@@ -88,7 +89,7 @@
   }
   .screen-header::after {
     content: ''; position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%);
-    width: 60px; height: 3px; background: var(--kin);
+    width: 60px; height: 3px; background: var(--ai);
   }
   .screen-badge {
     display: inline-block; padding: 4px 16px; border-radius: 2px;
@@ -96,7 +97,7 @@
   }
   .badge-sub { background: var(--ai-pale); color: var(--ai); border: 1px solid var(--ai-light); }
   .badge-mgr { background: var(--shu-light); color: var(--shu); border: 1px solid var(--shu); }
-  .badge-hr { background: var(--kin-light); color: #8B7130; border: 1px solid var(--kin); }
+  .badge-hr { background: var(--ai-pale); color: var(--ai); border: 1px solid var(--ai-light); }
   .screen-title { font-family: "Noto Serif JP", serif; font-size: 26px; font-weight: 700; letter-spacing: .08em; }
   .screen-desc { color: var(--usuzumi); font-size: 14px; margin-top: 8px; }
 
@@ -115,7 +116,7 @@
     letter-spacing: .05em;
   }
   .card-header .deco {
-    width: 4px; height: 20px; border-radius: 2px; background: var(--kin);
+    width: 4px; height: 20px; border-radius: 2px; background: var(--ai);
   }
 
   /* ========== セットアップ画面 ========== */
@@ -193,12 +194,12 @@
   }
 
   .reminder-card {
-    background: var(--kin-light); border-left: 3px solid var(--kin);
+    background: var(--ai-pale); border-left: 3px solid var(--ai);
     border-radius: 0 var(--radius) var(--radius) 0;
     padding: 18px 22px; display: flex; align-items: flex-start; gap: 14px;
   }
-  .reminder-title { font-family: "Noto Serif JP", serif; font-weight: 600; font-size: 14px; color: #8B7130; }
-  .reminder-text { font-size: 13px; color: #6B5A2E; margin-top: 4px; }
+  .reminder-title { font-family: "Noto Serif JP", serif; font-weight: 600; font-size: 14px; color: var(--ai); }
+  .reminder-text { font-size: 13px; color: var(--ai-light); margin-top: 4px; }
 
   .point-card {
     background: var(--ai-pale); border-left: 3px solid var(--ai);
@@ -337,7 +338,7 @@
     font-size: 13px;
   }
   .alert-danger { background: var(--shu-light); border-left: 3px solid var(--shu); }
-  .alert-warning { background: var(--kin-light); border-left: 3px solid var(--kin); }
+  .alert-warning { background: #FFF8ED; border-left: 3px solid var(--kitsune); }
   .alert-info { background: var(--matcha-light); border-left: 3px solid var(--matcha); }
   .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
   .alert-dept { font-weight: 700; }
@@ -361,7 +362,7 @@
   }
   .score-A { background: var(--matcha-light); color: var(--matcha); }
   .score-B { background: var(--ai-pale); color: var(--ai); }
-  .score-C { background: var(--kin-light); color: #8B7130; }
+  .score-C { background: #FFF8ED; color: var(--kitsune); }
   .score-D { background: var(--shu-light); color: var(--shu); }
   .mq-num { font-family: "Noto Serif JP", serif; font-weight: 700; font-size: 15px; width: 40px; text-align: right; }
   .type-tag {
@@ -391,7 +392,7 @@
   /* ========== 装飾：青海波パターン ========== */
   .seigaiha-divider {
     height: 12px; margin: 8px 0 20px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20'%3E%3Cpath d='M0 20 Q10 0 20 20 Q30 0 40 20' fill='none' stroke='%23C4A35A' stroke-width='.5' opacity='.15'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20'%3E%3Cpath d='M0 20 Q10 0 20 20 Q30 0 40 20' fill='none' stroke='%232C6E8A' stroke-width='.5' opacity='.2'/%3E%3C/svg%3E");
     background-repeat: repeat-x;
     background-position: center;
   }
