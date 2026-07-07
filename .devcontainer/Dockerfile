@@ -16,10 +16,11 @@ RUN apt-get update && apt-get install -y \
 # pnpm のインストール
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# vscode ユーザ作成（devcontainer の remoteUser に合わせる）
+# node ユーザを vscode にリネーム（devcontainer の remoteUser に合わせる）
+# node:20-bookworm には UID 1000 の node ユーザが存在するため、rename で対応
 RUN apt-get update && apt-get install -y sudo \
-    && groupadd -g 1000 vscode 2>/dev/null || true \
-    && useradd -m -s /bin/bash -u 1000 -g 1000 vscode 2>/dev/null || true \
+    && usermod -l vscode -d /home/vscode -m node \
+    && groupmod -n vscode node \
     && echo "vscode ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
     && rm -rf /var/lib/apt/lists/*
 
