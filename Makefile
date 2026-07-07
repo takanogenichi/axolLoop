@@ -1,6 +1,7 @@
 .PHONY: help setup init downv reset_db \
        dev build test lint lint-fix prisma-generate prisma-migrate prisma-studio \
        db redis minio \
+       kiro bedrock \
        logd install update
 
 # デフォルトターゲット
@@ -94,6 +95,19 @@ redis: ## Redis コンテナにログイン
 
 minio: ## MinIO コンテナにログイン
 	@docker exec -it s3altal-$$(grep -E '^INSTANCE=' .devcontainer/.env 2>/dev/null | cut -d= -f2 || echo 1) sh
+
+##@ AI CLI (kiro-cli / Claude Code)
+KIRO_IDP    ?= https://d-95674b0b93.awsapps.com/start
+KIRO_REGION ?= ap-northeast-1
+
+kiro: ## kiro-cli を起動 (未ログインなら自動でSSOログイン / opus-4.8 / trust-all)
+	@kiro-cli whoami >/dev/null 2>&1 || \
+		kiro-cli login --license pro --identity-provider $(KIRO_IDP) --region $(KIRO_REGION) --use-device-flow
+	@kiro-cli chat --trust-all-tools
+
+bedrock: ## Bedrock SSO ログイン & credentials 更新 (HOST 専用)
+	@if [ -n "$$REMOTE_CONTAINERS" ]; then echo "devcontainer環境下では実施できません。"; exit 1; fi
+	@bash bin/bedrock-refresh.sh
 
 ##@ その他
 logd: ## Docker Compose ログを tail

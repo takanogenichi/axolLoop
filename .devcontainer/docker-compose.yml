@@ -6,6 +6,12 @@ services:
     container_name: al-${INSTANCE:-1}
     volumes:
       - ..:/workspace:cached
+      # Claude Code: Bedrock credentials (make bedrock で生成)
+      - ${HOME}/.aws/credentials-bedrock:/home/vscode/.aws/credentials:ro
+      # Claude Code: 設定ファイル
+      - ./claude-settings.json:/home/vscode/.claude/settings.json
+      # kiro-cli: 認証トークン等を永続化 (再ビルド後も再ログイン不要)
+      - kirocli-data:/home/vscode/.local/share/kiro-cli
     ports:
       - "${AL_PORT:-29001}:3000"
     environment:
@@ -102,6 +108,7 @@ volumes:
   aldb-data:
   s3altal-data:
   alredis-data:
+  kirocli-data:
 
 networks:
   al-network:
