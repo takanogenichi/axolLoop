@@ -23,8 +23,10 @@ if ! mc ls local/axolloop 2>/dev/null; then
   echo "MinIO バケット 'axolloop' 作成完了"
 fi
 
-# kiro-cli: デフォルト agent / モデル設定（サンドボックス前提で trust-all）
+# kiro-cli: volume の所有権修正 + デフォルト agent / モデル設定
 if command -v kiro-cli >/dev/null 2>&1; then
+  # Docker volume は root で作成されるため所有権を修正
+  sudo chown -R vscode:vscode ~/.local/share/kiro-cli 2>/dev/null || true
   mkdir -p ~/.kiro/agents
   cp /workspace/.devcontainer/kiro/axol-agent.json ~/.kiro/agents/axol.json
   kiro-cli settings chat.defaultModel claude-opus-4.8 >/dev/null 2>&1 || true
