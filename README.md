@@ -13,11 +13,11 @@ AI を活用した 1on1 面談の品質向上・マネジメント評価支援�
 
 | コンテナ | 用途 | DevContainer(inst.1) |
 |---|---|---|
-| `al` | Node.js 20（NestJS + Nuxt 3 メインアプリ） | `29001` |
-| `aldb` | MySQL 8 | `29002` |
-| `smtpal` | Mailpit（メール確認 Web UI） | `29003` |
-| `s3altal` | MinIO（S3 エミュレータ Web UI） | `29004` |
-| `alredis` | Redis 7（BullMQ + キャッシュ） | `29005` |
+| `al-{N}` | Node.js 20（NestJS + Nuxt 3 メインアプリ） | `29001` |
+| `aldb-{N}` | MySQL 8 | `29002` |
+| `smtpal-{N}` | Mailpit（メール確認 Web UI） | `29003` |
+| `s3altal-{N}` | MinIO（S3 エミュレータ Web UI） | `29004` |
+| `alredis-{N}` | Redis 7（BullMQ + キャッシュ） | `29005` |
 
 ---
 

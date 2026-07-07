@@ -2,7 +2,16 @@
 # HOST → al コンテナログイン用スクリプト
 # DevContainer 起動済みの状態で使用してください
 
-CONTAINER_NAME="al"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ENV_FILE="$SCRIPT_DIR/.devcontainer/.env"
+
+# .devcontainer/.env からインスタンス番号を取得
+if [ -f "$ENV_FILE" ]; then
+  INSTANCE=$(grep -E '^INSTANCE=' "$ENV_FILE" | cut -d= -f2)
+fi
+INSTANCE="${INSTANCE:-1}"
+
+CONTAINER_NAME="al-${INSTANCE}"
 
 if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
   echo "エラー: コンテナ '${CONTAINER_NAME}' が起動していません"
@@ -10,5 +19,5 @@ if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
   exit 1
 fi
 
-echo "al コンテナにログインします..."
+echo "${CONTAINER_NAME} コンテナにログインします..."
 docker exec -it -u node -w /workspace "$CONTAINER_NAME" zsh
