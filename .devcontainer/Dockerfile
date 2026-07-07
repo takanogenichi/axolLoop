@@ -16,6 +16,16 @@ RUN apt-get update && apt-get install -y \
 # pnpm のインストール
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
+# MinIO Client (mc) のインストール
+RUN arch="$(dpkg --print-architecture)"; \
+    case "$arch" in \
+      amd64) mcArch="amd64" ;; \
+      arm64) mcArch="arm64" ;; \
+      *) echo "unsupported arch: $arch" >&2; exit 1 ;; \
+    esac; \
+    curl -fsSL "https://dl.min.io/client/mc/release/linux-${mcArch}/mc" -o /usr/local/bin/mc \
+    && chmod 755 /usr/local/bin/mc
+
 # node ユーザを vscode にリネーム（devcontainer の remoteUser に合わせる）
 # node:20-bookworm には UID 1000 の node ユーザが存在するため、rename で対応
 RUN apt-get update && apt-get install -y sudo \
