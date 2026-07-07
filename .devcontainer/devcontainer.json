@@ -3,7 +3,7 @@
   "dockerComposeFile": "docker-compose.yml",
   "service": "al",
   "workspaceFolder": "/workspace",
-  "remoteUser": "node",
+  "remoteUser": "vscode",
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}

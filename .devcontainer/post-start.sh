@@ -23,4 +23,12 @@ if ! mc ls local/axolloop 2>/dev/null; then
   echo "MinIO バケット 'axolloop' 作成完了"
 fi
 
+# kiro-cli: デフォルト agent / モデル設定（サンドボックス前提で trust-all）
+if command -v kiro-cli >/dev/null 2>&1; then
+  mkdir -p ~/.kiro/agents
+  cp /workspace/.devcontainer/kiro/axol-agent.json ~/.kiro/agents/axol.json
+  kiro-cli settings chat.defaultModel claude-opus-4.8 >/dev/null 2>&1 || true
+  kiro-cli agent set-default axol >/dev/null 2>&1 || true
+fi
+
 echo "=== postStartCommand 完了 ==="

@@ -1,0 +1,14 @@
+{
+  "name": "axol",
+  "description": "axolLoop devContainer default agent (opus-4.8 / trust-all, sandbox前提)",
+  "prompt": null,
+  "mcpServers": {},
+  "tools": ["*"],
+  "toolAliases": {},
+  "allowedTools": ["*"],
+  "resources": [],
+  "hooks": {},
+  "toolsSettings": {},
+  "includeMcpJson": true,
+  "model": "claude-opus-4.8"
+}

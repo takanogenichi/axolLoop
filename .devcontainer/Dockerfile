@@ -16,17 +16,38 @@ RUN apt-get update && apt-get install -y \
 # pnpm のインストール
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# oh-my-zsh のインストール（node ユーザ用）
-USER node
+# vscode ユーザ作成（devcontainer の remoteUser に合わせる）
+RUN apt-get update && apt-get install -y sudo \
+    && groupadd -g 1000 vscode 2>/dev/null || true \
+    && useradd -m -s /bin/bash -u 1000 -g 1000 vscode 2>/dev/null || true \
+    && echo "vscode ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+    && rm -rf /var/lib/apt/lists/*
+
+# oh-my-zsh のインストール（vscode ユーザ用）
+USER vscode
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 USER root
+
+# ── kiro-cli インストール ──
+# install.sh は /root/.local/bin に配置するため、vscode ユーザ用に /usr/local/bin へ移動
+ARG KIRO_CLI_VERSION=latest
+RUN set -eux; \
+    arch="$(dpkg --print-architecture)"; \
+    case "$arch" in \
+      amd64) kiroArch="x86_64" ;; \
+      arm64) kiroArch="aarch64" ;; \
+      *) echo "unsupported arch: $arch" >&2; exit 1 ;; \
+    esac; \
+    curl --proto '=https' --tlsv1.2 -fsSL \
+      "https://desktop-release.q.us-east-1.amazonaws.com/${KIRO_CLI_VERSION}/kirocli-${kiroArch}-linux.zip" \
+      -o /tmp/kirocli.zip; \
+    unzip -q /tmp/kirocli.zip -d /tmp; \
+    /tmp/kirocli/install.sh --no-confirm --force; \
+    mv /root/.local/bin/kiro-cli /usr/local/bin/kiro-cli; \
+    chmod 755 /usr/local/bin/kiro-cli; \
+    rm -rf /tmp/kirocli /tmp/kirocli.zip
 
 # 作業ディレクトリ
 WORKDIR /workspace
 
-# node ユーザに sudo 権限を付与
-RUN apt-get update && apt-get install -y sudo \
-    && echo "node ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
-    && rm -rf /var/lib/apt/lists/*
-
-USER node
+USER vscode
