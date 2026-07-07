@@ -30,22 +30,21 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 USER root
 
 # ── kiro-cli インストール ──
-# install.sh は /root/.local/bin に配置するため、vscode ユーザ用に /usr/local/bin へ移動
+# aarch64 は glibc 2.39 要求のため musl ビルドを使用。
+# Q_INSTALL_GLOBAL=1 で /usr/local/bin に直接配置（vscode ユーザから実行可能）。
 ARG KIRO_CLI_VERSION=latest
 RUN set -eux; \
     arch="$(dpkg --print-architecture)"; \
     case "$arch" in \
-      amd64) kiroArch="x86_64" ;; \
-      arm64) kiroArch="aarch64" ;; \
+      amd64) kiroZip="kirocli-x86_64-linux.zip" ;; \
+      arm64) kiroZip="kirocli-aarch64-linux-musl.zip" ;; \
       *) echo "unsupported arch: $arch" >&2; exit 1 ;; \
     esac; \
     curl --proto '=https' --tlsv1.2 -fsSL \
-      "https://desktop-release.q.us-east-1.amazonaws.com/${KIRO_CLI_VERSION}/kirocli-${kiroArch}-linux.zip" \
+      "https://desktop-release.q.us-east-1.amazonaws.com/${KIRO_CLI_VERSION}/${kiroZip}" \
       -o /tmp/kirocli.zip; \
     unzip -q /tmp/kirocli.zip -d /tmp; \
-    /tmp/kirocli/install.sh --no-confirm --force; \
-    mv /root/.local/bin/kiro-cli /usr/local/bin/kiro-cli; \
-    chmod 755 /usr/local/bin/kiro-cli; \
+    Q_INSTALL_GLOBAL=1 KIRO_CLI_SKIP_SETUP=1 /tmp/kirocli/install.sh; \
     rm -rf /tmp/kirocli /tmp/kirocli.zip
 
 # 作業ディレクトリ
